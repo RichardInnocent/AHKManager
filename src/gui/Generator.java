@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
@@ -12,18 +13,19 @@ public class Generator extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-//		Scene scene = new Scene(new VBox(), Configuration.getInt(ConfigProperty.WIDTH),
-//				Configuration.getInt(ConfigProperty.HEIGHT));
 		primaryStage.setTitle("AHK Manager");
 		
-		InputStream fxmlInput = new FileInputStream("src/gui/fxml/AHKManager.fxml");
-		
 		// Loading FXML
+		InputStream fxmlInput = new FileInputStream("src/gui/fxml/AHKManager.fxml");
 		primaryStage.setScene(new Scene((new FXMLLoader()).load(fxmlInput),
 				Configuration.getInt(ConfigProperty.HEIGHT),
 				Configuration.getInt(ConfigProperty.WIDTH)));
 		
 		primaryStage.show();
+		
+		// TODO Load values into tabs
+		File file = new File("scripts");
+		File [] files = file.listFiles();
 		
 	}
 	
