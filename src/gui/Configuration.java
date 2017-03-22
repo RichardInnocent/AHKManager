@@ -5,21 +5,18 @@ import java.util.Properties;
 
 /**
  * Class that handles all of the program configuration, such as window size. it contains many
- * static methods for ease of use, and should not be instantiated.<br>
- * <br>
- * The config file should always be located at {@code ./config/app.config}. 
+ * static methods for ease of use, and should not be instantiated.
  * 
  * @author Richard Innocent
  */
 public class Configuration {
 	
-	private static final String configFilePath = ".config/app.config";
 	private static Properties config = new Properties();
 	
 	// Loading config
 	static {
 		setDefaults();
-		load(configFilePath);
+		load(FileLocations.CONFIG_FILE.toString());
 	}
 	
 	/**
@@ -61,7 +58,7 @@ public class Configuration {
 	 */
 	public static void save() {
 		try {
-			OutputStream out = new FileOutputStream(configFilePath);
+			OutputStream out = new FileOutputStream(FileLocations.CONFIG_FILE.toString());
 			try {
 				config.store(out, "");
 			} catch (IOException e) {

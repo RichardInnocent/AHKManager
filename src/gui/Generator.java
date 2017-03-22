@@ -1,8 +1,6 @@
 package gui;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,16 +14,12 @@ public class Generator extends Application {
 		primaryStage.setTitle("AHK Manager");
 		
 		// Loading FXML
-		InputStream fxmlInput = new FileInputStream("src/gui/fxml/AHKManager.fxml");
+		InputStream fxmlInput = new FileInputStream(FileLocations.FXML_BASE + "AHKManager.fxml");
 		primaryStage.setScene(new Scene((new FXMLLoader()).load(fxmlInput),
 				Configuration.getInt(ConfigProperty.HEIGHT),
 				Configuration.getInt(ConfigProperty.WIDTH)));
 		
 		primaryStage.show();
-		
-		// TODO Load values into tabs
-		File file = new File("scripts");
-		File [] files = file.listFiles();
 		
 	}
 	
