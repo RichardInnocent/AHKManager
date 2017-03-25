@@ -32,4 +32,8 @@ public class AHKScript extends AHKFile {
 		return description;
 	}
 	
+	public void parse() {
+		
+	}
+	
 }

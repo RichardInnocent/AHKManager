@@ -41,27 +41,34 @@ public class AHKController {
 	}
 	
 	private class AHKCell extends TreeCell<AHKFile> {
-		TextField textField = new TextField("");
+		private Tooltip tooltip = new Tooltip();
 		
 	    @Override
 	    public void updateItem(AHKFile item, boolean empty) {
-	      super.updateItem(item, empty);
+	    	super.updateItem(item, empty);
+	    	
+	    	if (empty) {
+		    	setText(null);
+		    	setGraphic(null);
+		    } else {
+		    	setText(item.toString());
+		    	setGraphic(getTreeItem().getGraphic());
+		    }
+	    	
+	    	if (item != null) {
+		    	// If the contained item is a script, add a Tooltip on hover.
+		    	if (item.isScript()) {
+		    		setOnMouseEntered(new EventHandler<MouseEvent>() {
+		    			@Override
+		    			public void handle(MouseEvent event) {
+		    				tooltip.setText(item.toString());
+		    				setTooltip(tooltip);
+		    			}
+		    		});
+		    	}
+	    	}
+	      
 
-	      if (empty) {
-	        setText(null);
-	        setGraphic(null);
-	      } else {
-	          setText(item.toString());
-	          setGraphic(getTreeItem().getGraphic());
-	      }
-	      
-	      setOnMouseEntered(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				System.out.println(getItem());
-			}
-	      });
-	      
 	    }
 	}
 		
