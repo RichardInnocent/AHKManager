@@ -1,12 +1,17 @@
 package scripts;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class AHKScript extends AHKFile {
 	
 	// TODO: Remove silly name.
 	String description = "A script";
+	String descBeginFlag = "/**";
+	String descEndFlag = "*/";
 	
 	/**
 	 * Creates an {@code AHKScript}.
@@ -22,6 +27,7 @@ public class AHKScript extends AHKFile {
 		} else {
 			this.file = file;
 		}
+		parse();
 	}
 	
 	/**
@@ -32,8 +38,40 @@ public class AHKScript extends AHKFile {
 		return description;
 	}
 	
-	public void parse() {
-		
+	private void parse() {
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			
+			String currentLine = "",
+					description = "";
+			
+			// The flag that says whether this function is currently processing a description.
+			boolean processingDesc = false;
+			
+			// Reading in the file
+			try {
+				while ((currentLine = reader.readLine()) != null) {
+					
+				}
+			} catch (IOException e) {
+				gui.Messenger.showError("AHKScript could not be read at\n" +
+						file.getAbsolutePath(), e);
+			}
+			
+		} catch (FileNotFoundException e) {
+			gui.Messenger.showError("AHKScript not found at " + file.getAbsolutePath(), e);
+		}
+	}
+	
+	/**
+	 * Takes a line of AutoHotkey code and determines whether it contains a hotkey declaration.
+	 * @param codeLine The line of AutoHotkey code.
+	 * @return {@code true} if the code contains a hotkey declaration
+	 */
+	private boolean declaresHotkey(String codeLine) {
+		if (codeLine.contains("::"))
+			return true;
+		return false;
 	}
 	
 }

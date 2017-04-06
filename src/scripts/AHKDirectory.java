@@ -27,7 +27,8 @@ public class AHKDirectory extends AHKFile {
 	}
 	
 	/**
-	 * Searches the directory for {@code AHKFile}s.
+	 * Searches the directory for {@code AHKFile}s and makes sure that the {@AHKDirectory} is up
+	 * to date.
 	 */
 	public void refreshDirectory() {
 		for (File fileInDirectory : file.listFiles()) {
