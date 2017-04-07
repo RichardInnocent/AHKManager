@@ -12,6 +12,7 @@ public class AHKScript extends AHKFile {
 	String description = "A script";
 	String descBeginFlag = "/**";
 	String descEndFlag = "*/";
+	String commentFlag = ";";
 	
 	/**
 	 * Creates an {@code AHKScript}.
@@ -51,6 +52,19 @@ public class AHKScript extends AHKFile {
 			// Reading in the file
 			try {
 				while ((currentLine = reader.readLine()) != null) {
+					currentLine = currentLine.trim();
+					
+					int indexOfSingleLineComment = getIndexOfSingleLineCommentBegin(currentLine);
+					int indexOfMultiLineComment = getIndexOfMultiLineCommentBegin(currentLine);
+					
+//					if (indexOfSingleLineComment != -1) {
+//						System.out.println(currentLine);
+//						System.out.println(indexOfSingleLineComment);
+//					}
+					if (indexOfMultiLineComment != -1) {
+						System.out.println(currentLine);
+						System.out.println(indexOfMultiLineComment);
+					}
 					
 				}
 			} catch (IOException e) {
@@ -72,6 +86,38 @@ public class AHKScript extends AHKFile {
 		if (codeLine.contains("::"))
 			return true;
 		return false;
+	}
+	
+	private int getIndexOfSingleLineCommentBegin(String codeLine) {
+		if (codeLine.startsWith(commentFlag)) {
+			return 0;
+		} else {
+			return codeLine.indexOf("\\S+" + commentFlag);
+		}
+	}
+	
+	private int getIndexOfMultiLineCommentBegin(String codeLine) {
+		if (codeLine.startsWith("/*")) {
+			return 0;
+		} else {
+			return codeLine.indexOf("\\S+" + commentFlag);
+		}
+	}
+	
+	private boolean lineBeginsCommentSection(String codeLine) {
+		return codeLine.contains("/*");
+	}
+	
+	private boolean lineEndsCommentSection(String codeLine) {
+		return codeLine.contains("*/");
+	}
+	
+	private boolean lineContainsSingleLineComment(String codeLine) {
+		return codeLine.contains("\\S" + commentFlag);
+	}
+	
+	private boolean setsCommentFlag(String codeLine) {
+		return codeLine.toLowerCase().contains("#commentflag ");
 	}
 	
 }
