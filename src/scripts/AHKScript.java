@@ -1,18 +1,15 @@
 package scripts;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
 
 public class AHKScript extends AHKFile {
 	
 	// TODO: Remove silly name.
-	String description = "A script";
-	String descBeginFlag = "/**";
-	String descEndFlag = "*/";
-	String commentFlag = ";";
+	String description = "A script",
+			commentFlag = ";";
+	
+	List<Hotkey> hotkeys = new ArrayList<Hotkey>();
 	
 	/**
 	 * Creates an {@code AHKScript}.
@@ -38,33 +35,97 @@ public class AHKScript extends AHKFile {
 	public String getDescription() {
 		return description;
 	}
-	
+	// /** adacacacac */
 	private void parse() {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			
 			String currentLine = "",
-					description = "";
+					description = "",
+					code = "";
 			
 			// The flag that says whether this function is currently processing a description.
-			boolean processingDesc = false;
+			boolean processingDesc = false,
+					processingComment = false;
 			
 			// Reading in the file
 			try {
-				while ((currentLine = reader.readLine()) != null) {
-					currentLine = currentLine.trim();
+				lines: while ((currentLine = reader.readLine()) != null) {
+
+					// Whole line is a comment so can be ignored
+					if (currentLine.startsWith(commentFlag))
+						continue;
 					
-					int indexOfSingleLineComment = getIndexOfSingleLineCommentBegin(currentLine);
-					int indexOfMultiLineComment = getIndexOfMultiLineCommentBegin(currentLine);
-					
-//					if (indexOfSingleLineComment != -1) {
-//						System.out.println(currentLine);
-//						System.out.println(indexOfSingleLineComment);
-//					}
-					if (indexOfMultiLineComment != -1) {
-						System.out.println(currentLine);
-						System.out.println(indexOfMultiLineComment);
+					// Looping characters in line
+					chars: for (int i = 0; i < currentLine.length(); i++) {
+						
+						// Cutting string to this character onwards
+						String characters = currentLine.substring(i);
+						
+						// If processing comment
+						if (processingComment) {
+							
+							if (characters.startsWith("*/")) {
+								processingComment = processingDesc = false;
+								i++; // Ignore the second forward slash so that something like */*
+								// doesn't trigger another comment
+							} else if (processingDesc) {
+								description += characters.charAt(0);
+							}
+							
+						// If not processing comment
+						} else {
+							
+							// If single line comment then rest of line can be ignored
+							if (characters.startsWith("\t") || characters.startsWith(" ")) {
+								if (characters.substring(1).startsWith(commentFlag)) {
+									continue lines;
+								}
+								// If it's whitespace, we can move on without processing any more
+								// checks.
+								continue chars;
+							}
+							
+							// If a new multi-line comment is beginning...
+							if (characters.startsWith("/*")) {
+								processingComment = true;
+								
+								// If a new description is starting...
+								if (characters.startsWith("/**")) {
+									// Set the old description to blank
+									description = "";
+									
+									processingDesc = true;
+									
+									// Stop the ** being processed as part of the description
+									i += 2;
+								}
+							// We are processing code
+							} else {
+								code += characters.charAt(0);
+							}
+						}
 					}
+					
+					// Once the line has been processed...
+					
+					// Check if the code contained a hotkey
+					if (code.contains("::")) {
+						String [] components = code.split("::");
+						hotkeys.add(new Hotkey(description.trim(), components[0].trim()));
+						
+					// Check if the code contains a comment flag modification
+					} else if (code.toLowerCase().contains("#commentflag\\S+")) {
+						int commentFlagIndex = code.indexOf('#');
+						if (code.substring(commentFlagIndex).toLowerCase().
+								startsWith("#commentflag")) {
+							commentFlag = code.substring(commentFlagIndex +
+									"#commentflag".length()).trim();
+						}
+					}
+					
+					// Reset code
+					code = "";
 					
 				}
 			} catch (IOException e) {
@@ -75,49 +136,6 @@ public class AHKScript extends AHKFile {
 		} catch (FileNotFoundException e) {
 			gui.Messenger.showError("AHKScript not found at " + file.getAbsolutePath(), e);
 		}
-	}
-	
-	/**
-	 * Takes a line of AutoHotkey code and determines whether it contains a hotkey declaration.
-	 * @param codeLine The line of AutoHotkey code.
-	 * @return {@code true} if the code contains a hotkey declaration
-	 */
-	private boolean declaresHotkey(String codeLine) {
-		if (codeLine.contains("::"))
-			return true;
-		return false;
-	}
-	
-	private int getIndexOfSingleLineCommentBegin(String codeLine) {
-		if (codeLine.startsWith(commentFlag)) {
-			return 0;
-		} else {
-			return codeLine.indexOf("\\S+" + commentFlag);
-		}
-	}
-	
-	private int getIndexOfMultiLineCommentBegin(String codeLine) {
-		if (codeLine.startsWith("/*")) {
-			return 0;
-		} else {
-			return codeLine.indexOf("\\S+" + commentFlag);
-		}
-	}
-	
-	private boolean lineBeginsCommentSection(String codeLine) {
-		return codeLine.contains("/*");
-	}
-	
-	private boolean lineEndsCommentSection(String codeLine) {
-		return codeLine.contains("*/");
-	}
-	
-	private boolean lineContainsSingleLineComment(String codeLine) {
-		return codeLine.contains("\\S" + commentFlag);
-	}
-	
-	private boolean setsCommentFlag(String codeLine) {
-		return codeLine.toLowerCase().contains("#commentflag ");
 	}
 	
 }

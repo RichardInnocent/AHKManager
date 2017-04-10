@@ -2,8 +2,6 @@ package scripts;
 
 import java.util.*;
 
-import javafx.scene.input.KeyCode;
-
 public class Hotkey {
 	
 	List<Key> keys = new ArrayList<Key>(5);
@@ -32,6 +30,11 @@ public class Hotkey {
 	public Hotkey(String description, String hotkeys) {
 		this.description = description;
 		keys = parseHotkey(hotkeys);
+		
+		for (Key key : keys) {
+			System.out.println(key.getDescription());
+		}
+		
 	}
 	
 	/**
@@ -39,7 +42,66 @@ public class Hotkey {
 	 * @param line The segment of AutoHotkey code.
 	 */
 	private List<Key> parseHotkey(String line) {
-		// TODO: parse the hotkeys
+		
+		List<Key> keys = new ArrayList<Key>(5);
+		String components [] = line.split("&");
+		
+		// Loop through 
+		compLoop: for (String component : components) {
+			component = component.trim();
+			Key key = null;
+			
+			// Loop through characters.
+			// All non-alphanumeric characters should be a modifier
+			for (int i = 0; i < component.length(); i++) {
+				component = component.substring(i);
+				
+				char character = component.charAt(0);
+				
+				// Get all modifiers and subtract them from the key string
+				if (!Character.isDigit(character) &&
+						!Character.isAlphabetic(character)) {
+					
+					// The left and right characters always have a character after for the hotkey
+					if (character == '<' || character == '>') {
+						key = getKey(component.substring(0, 2));
+						i++; // Ignore next char
+					// If not one of the above, the hotkey will only be one character long
+					} else {
+						key = getKey(Character.toString(character));
+					}
+					
+					// If the key exists then add it to the hotkey
+					if (key != null)
+						keys.add(key);
+					
+				} else {
+					key = getKey(component);
+					
+					// If the key exists then add it to the hotkey
+					if (key != null)
+						keys.add(key);
+					
+					continue compLoop;
+				}
+			}
+			
+		}
+		
+		return keys;
+	}
+	
+	/**
+	 * Returns the key associated with the code.
+	 * @param code The AHK keycode associated with the key.
+	 * @return The {@code Key}, or null if there is no {@code Key} that corresponds to that code.
+	 */
+	private Key getKey(String code) {
+		for(Key key : Key.values()) {
+			if (key.is(code)) {
+				return key;
+			}
+		}
 		return null;
 	}
 	
