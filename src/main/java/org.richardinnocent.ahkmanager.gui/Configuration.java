@@ -3,6 +3,8 @@ package org.richardinnocent.ahkmanager.gui;
 import java.io.*;
 import java.util.Properties;
 
+import org.richardinnocent.ahkmanager.files.Resources;
+
 /**
  * Class that handles all of the program configuration, such as window size. it contains many
  * static methods for ease of use, and should not be instantiated.
@@ -16,7 +18,7 @@ public class Configuration {
 	// Loading config
 	static {
 		setDefaults();
-		load(FileLocations.CONFIG_FILE.toString());
+		load(Resources.CONFIG_FILE.getFullPath());
 	}
 
 	/**
@@ -58,7 +60,7 @@ public class Configuration {
 	 */
 	public static void save() {
 		try {
-			OutputStream out = new FileOutputStream(FileLocations.CONFIG_FILE.toString());
+			OutputStream out = new FileOutputStream(Resources.CONFIG_FILE.getFullPath());
 			try {
 				config.store(out, "");
 			} catch (IOException e) {

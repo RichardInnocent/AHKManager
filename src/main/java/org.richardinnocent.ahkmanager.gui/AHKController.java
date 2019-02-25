@@ -23,7 +23,8 @@ public class AHKController {
 
 		// Initialising root directory
 		try {
-			scriptRootDir = new AHKDirectory(new File(FileLocations.SCRIPT_BASE.toString()));
+			scriptRootDir = new AHKDirectory(new File(
+					"C:\\Users\\RichardInnocent\\Documents\\AHKScripts"));
 			System.out.println(scriptRootDir);
 		} catch (FileNotFoundException | IllegalArgumentException e) {
 			Messenger.showError(e.toString());
@@ -80,7 +81,7 @@ public class AHKController {
 		if (!ahkRoot.isScript()) {
 			List<AHKFile> containedFiles = ((AHKDirectory) ahkRoot).getFiles();
 			for (AHKFile file : containedFiles) {
-				TreeItem<AHKFile> newTreeItem = new TreeItem<AHKFile>(file);
+				TreeItem<AHKFile> newTreeItem = new TreeItem<>(file);
 				populateTreeItem(newTreeItem);
 				root.getChildren().add(newTreeItem);
 			}
