@@ -3,9 +3,13 @@ package org.richardinnocent.ahkmanager.scripts;
 import java.io.*;
 import java.util.*;
 
-import org.richardinnocent.ahkmanager.gui.Messenger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.richardinnocent.ahkmanager.flow.Execution;
 
 public class AHKDirectory extends AHKFile {
+
+	private static Logger LOGGER = LogManager.getLogger(AHKDirectory.class);
 
 	List<AHKFile> ahkFiles = new ArrayList<>(); // Contains all AHK files in directory
 
@@ -36,13 +40,13 @@ public class AHKDirectory extends AHKFile {
 				try {
 					ahkFiles.add(new AHKDirectory(fileInDirectory));
 				} catch (FileNotFoundException e) {
-					Messenger.showError(e.toString());
+					Execution.error(LOGGER, e.toString(), e);
 				}
 			} else if(fileInDirectory.getName().endsWith(".ahk")) {
 				try {
 					ahkFiles.add(new AHKScript(fileInDirectory));
 				} catch (FileNotFoundException e) {
-					Messenger.showError(e.toString());
+					Execution.error(LOGGER, e.toString(), e);
 				}
 			}
 		}

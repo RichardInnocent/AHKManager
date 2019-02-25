@@ -1,10 +1,11 @@
 package org.richardinnocent.ahkmanager.scripts;
 
 import java.io.File;
+import java.io.Serializable;
 
-public abstract class AHKFile {
+public abstract class AHKFile implements Serializable {
 
-	File file;
+	protected File file;
 
 	/**
 	 * Returns the file path of the file.

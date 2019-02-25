@@ -3,7 +3,10 @@ package org.richardinnocent.ahkmanager.gui;
 import java.io.*;
 import java.util.Properties;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.richardinnocent.ahkmanager.files.Resources;
+import org.richardinnocent.ahkmanager.flow.Execution;
 
 /**
  * Class that handles all of the program configuration, such as window size. it contains many
@@ -12,6 +15,8 @@ import org.richardinnocent.ahkmanager.files.Resources;
  * @author Richard Innocent
  */
 public class Configuration {
+
+	private static final Logger LOGGER = LogManager.getLogger(Configuration.class);
 
 	private static Properties config = new Properties();
 
@@ -43,14 +48,14 @@ public class Configuration {
 	public static void load(String filePath) {
 		File configFile = new File(filePath);
 		if (!configFile.isFile()) {
-			Messenger.showWarning("Configuration file could not be found.");
+			Execution.warn(LOGGER, "Configuration file not found at " + filePath);
 		} else {
 			try {
 				InputStream input = new FileInputStream(configFile);
 				config.load(input);
 				System.out.println(config);
 			} catch (IOException e) {
-				Messenger.showWarning("Config file could not be read.");
+				Execution.warn(LOGGER, "Config file could not be read", e);
 			}
 		}
 	}
@@ -69,7 +74,7 @@ public class Configuration {
 				out.close();
 			}
 		} catch (IOException e) {
-			Messenger.showError(e.toString());
+			Execution.error(LOGGER, e.toString(), e);
 		}
 	}
 

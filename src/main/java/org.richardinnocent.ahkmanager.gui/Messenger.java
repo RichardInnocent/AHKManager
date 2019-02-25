@@ -40,7 +40,7 @@ public class Messenger {
 		createAlert(message, AlertType.ERROR).showAndWait();
 	}
 
-	public static void showError(String message, Exception exception) {
+	public static void showError(String message, Throwable exception) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle(AlertType.ERROR.toString());
 		alert.setHeaderText(null);

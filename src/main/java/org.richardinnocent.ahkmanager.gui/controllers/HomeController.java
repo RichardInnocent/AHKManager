@@ -3,7 +3,9 @@ package org.richardinnocent.ahkmanager.gui.controllers;
 import java.io.*;
 import java.util.*;
 
-import org.richardinnocent.ahkmanager.gui.Messenger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.richardinnocent.ahkmanager.flow.Execution;
 import org.richardinnocent.ahkmanager.scripts.AHKDirectory;
 import org.richardinnocent.ahkmanager.scripts.AHKFile;
 
@@ -13,6 +15,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
 public class HomeController {
+
+	private static final Logger LOGGER = LogManager.getLogger(HomeController.class);
 
 	@FXML ListView<File> activeList;
 	@FXML TreeView<AHKFile> allTreeView;
@@ -28,7 +32,7 @@ public class HomeController {
 					"C:\\Users\\RichardInnocent\\Documents\\AHKScripts"));
 			System.out.println(scriptRootDir);
 		} catch (FileNotFoundException | IllegalArgumentException e) {
-			Messenger.showError(e.toString());
+			Execution.error(LOGGER, e.toString(), e);
 			System.exit(1);
 		}
 

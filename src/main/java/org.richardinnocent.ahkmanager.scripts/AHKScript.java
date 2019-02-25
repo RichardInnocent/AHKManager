@@ -2,9 +2,14 @@ package org.richardinnocent.ahkmanager.scripts;
 
 import java.io.*;
 import java.util.*;
-import org.richardinnocent.ahkmanager.gui.Messenger;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.richardinnocent.ahkmanager.flow.Execution;
 
 public class AHKScript extends AHKFile {
+
+	private static final Logger LOGGER = LogManager.getLogger(AHKScript.class);
 
 	// TODO: Remove silly name.
 	String description = "A script",
@@ -130,12 +135,11 @@ public class AHKScript extends AHKFile {
 
 				}
 			} catch (IOException e) {
-				Messenger.showError("AHKScript could not be read at\n" +
-						file.getAbsolutePath(), e);
+				Execution.error(LOGGER, "AHKScript could not be read at\n" + file.getAbsolutePath(), e);
 			}
 
 		} catch (FileNotFoundException e) {
-			Messenger.showError("AHKScript not found at " + file.getAbsolutePath(), e);
+			Execution.error(LOGGER, "AHKScript not found at " + file.getAbsolutePath(), e);
 		}
 	}
 
