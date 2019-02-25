@@ -1,8 +1,9 @@
-package org.richardinnocent.ahkmanager.gui;
+package org.richardinnocent.ahkmanager.gui.controllers;
 
 import java.io.*;
 import java.util.*;
 
+import org.richardinnocent.ahkmanager.gui.Messenger;
 import org.richardinnocent.ahkmanager.scripts.AHKDirectory;
 import org.richardinnocent.ahkmanager.scripts.AHKFile;
 
@@ -11,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
-public class AHKController {
+public class HomeController {
 
 	@FXML ListView<File> activeList;
 	@FXML TreeView<AHKFile> allTreeView;
