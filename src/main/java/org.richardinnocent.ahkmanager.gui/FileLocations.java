@@ -1,11 +1,11 @@
-package gui;
+package org.richardinnocent.ahkmanager.gui;
 
 public enum FileLocations {
-	
+
 	SCRIPT_BASE {
 		@Override
 		public String toString() {
-			return "scripts/";
+			return "C:\\Users\\RichardInnocent\\Documents\\AHKScripts";
 		}
 	}, CONFIG_BASE {
 		@Override
@@ -20,7 +20,7 @@ public enum FileLocations {
 	}, GUI_BASE {
 		@Override
 		public String toString() {
-			return "src/gui/";
+			return "resources/";
 		}
 	}, FXML_BASE {
 		@Override
@@ -28,8 +28,8 @@ public enum FileLocations {
 			return GUI_BASE + "fxml/";
 		}
 	};
-	
+
 	@Override
 	public abstract String toString();
-	
+
 }

@@ -1,12 +1,12 @@
-package scripts;
+package org.richardinnocent.ahkmanager.scripts;
 
 import java.util.*;
 
 public class Hotkey {
-	
+
 	List<Key> keys = new ArrayList<Key>(5);
 	String description;
-	
+
 	/**
 	 * Initialises a hot key with the given keys.
 	 * @param description The description of the Hotkey. Leave blank if no description.
@@ -14,12 +14,12 @@ public class Hotkey {
 	 */
 	public Hotkey(String description, Key... keys) throws IllegalArgumentException {
 		this.description = description;
-		
+
 		// Adding keys to List
 		for (Key key : keys)
 			this.keys.add(key);
 	}
-	
+
 	/**
 	 * Initialises a {@code Hotkey} with the given keys and description. The hotkeys are parsed to
 	 * find which keys the characters represent.
@@ -30,38 +30,38 @@ public class Hotkey {
 	public Hotkey(String description, String hotkeys) {
 		this.description = description;
 		keys = parseHotkey(hotkeys);
-		
+
 		for (Key key : keys) {
 			System.out.println(key.getDescription());
 		}
-		
+
 	}
-	
+
 	/**
 	 * Parses a line that contains a hotkey.
 	 * @param line The segment of AutoHotkey code.
 	 */
 	private List<Key> parseHotkey(String line) {
-		
+
 		List<Key> keys = new ArrayList<Key>(5);
 		String components [] = line.split("&");
-		
-		// Loop through 
+
+		// Loop through
 		compLoop: for (String component : components) {
 			component = component.trim();
 			Key key = null;
-			
+
 			// Loop through characters.
 			// All non-alphanumeric characters should be a modifier
 			for (int i = 0; i < component.length(); i++) {
 				component = component.substring(i);
-				
+
 				char character = component.charAt(0);
-				
+
 				// Get all modifiers and subtract them from the key string
 				if (!Character.isDigit(character) &&
 						!Character.isAlphabetic(character)) {
-					
+
 					// The left and right characters always have a character after for the hotkey
 					if (character == '<' || character == '>') {
 						key = getKey(component.substring(0, 2));
@@ -70,27 +70,27 @@ public class Hotkey {
 					} else {
 						key = getKey(Character.toString(character));
 					}
-					
+
 					// If the key exists then add it to the hotkey
 					if (key != null)
 						keys.add(key);
-					
+
 				} else {
 					key = getKey(component);
-					
+
 					// If the key exists then add it to the hotkey
 					if (key != null)
 						keys.add(key);
-					
+
 					continue compLoop;
 				}
 			}
-			
+
 		}
-		
+
 		return keys;
 	}
-	
+
 	/**
 	 * Returns the key associated with the code.
 	 * @param code The AHK keycode associated with the key.
@@ -104,7 +104,7 @@ public class Hotkey {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets the description associated with the hotkey.
 	 * @return A description of the hotkey. If the description is null, a blank string will be
@@ -115,7 +115,7 @@ public class Hotkey {
 			return "";
 		return description;
 	}
-	
+
 	/**
 	 * Gets a list of keys that make up the hotkey as a set of key descriptions. This makes the
 	 * keys easier to read.
@@ -128,7 +128,7 @@ public class Hotkey {
 		}
 		return keysDesc + keys.get(keys.size()-1);
 	}
-	
+
 	/**
 	 * Returns a {@code List} of {@code Key}s for the hotkey.
 	 * @return A {@code List} of {@code Key}s for the hotkey.
@@ -136,7 +136,7 @@ public class Hotkey {
 	public List<Key> getKeysAsList() {
 		return keys;
 	}
-	
+
 	@Override
 	public String toString() {
 		String hotkey = getKeys();
@@ -145,5 +145,5 @@ public class Hotkey {
 			hotkey += "\n" + description;
 		return hotkey;
 	}
-	
+
 }

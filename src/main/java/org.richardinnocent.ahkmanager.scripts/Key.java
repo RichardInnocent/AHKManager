@@ -1,8 +1,8 @@
-package scripts;
+package org.richardinnocent.ahkmanager.scripts;
 
 /**
  * Represents all hotkeys supported by AutoHotkey.
- * 
+ *
  * @author Richard Innocent
  *
  */
@@ -1360,11 +1360,11 @@ public enum Key {
 			return "Joystick Button 32";
 		}
 	};
-	
+
 	public abstract String getAHKString();
 	public abstract String getDescription();
 	public boolean is(String chars) {
 		return chars.equalsIgnoreCase(getAHKString());
 	}
-	
+
 }

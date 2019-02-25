@@ -1,4 +1,4 @@
-package gui;
+package org.richardinnocent.ahkmanager.gui;
 
 import java.util.Optional;
 import java.io.*;
@@ -10,12 +10,12 @@ import javafx.scene.layout.*;
 /**
  * A lightweight wrapper for the {@code javafx.scene.Alert} that allows alerts to be created within
  * one line.
- * 
+ *
  * @see javafx.scene.control.Alert
  * @author Richard Innocent
  */
 public class Messenger {
-	
+
 	/**
 	 * Creates an info message that will be displayed to the user.
 	 * @param message The information that should be displayed in the message.
@@ -23,7 +23,7 @@ public class Messenger {
 	public static void showInfo(String message) {
 		createAlert(message, AlertType.INFORMATION).showAndWait();
 	}
-	
+
 	/**
 	 * Creates a warning message that will be displayed to the user.
 	 * @param message The information that should be displayed in the message.
@@ -31,7 +31,7 @@ public class Messenger {
 	public static void showWarning(String message) {
 		createAlert(message, AlertType.WARNING).showAndWait();
 	}
-	
+
 	/**
 	 * Creates an error message that will be displayed to the user.
 	 * @param message The information that should be displayed in the message.
@@ -39,13 +39,13 @@ public class Messenger {
 	public static void showError(String message) {
 		createAlert(message, AlertType.ERROR).showAndWait();
 	}
-	
+
 	public static void showError(String message, Exception exception) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle(AlertType.ERROR.toString());
 		alert.setHeaderText(null);
 		alert.setContentText(message);
-		
+
 		// Create expandable Exception.
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
@@ -73,7 +73,7 @@ public class Messenger {
 
 		alert.showAndWait();
 	}
-	
+
 	/**
 	 * Creates a confirmation message that will be displayed to the user.
 	 * @param message The information that should be displayed in the message.
@@ -82,7 +82,7 @@ public class Messenger {
 	public static Optional<ButtonType> showConfirmation(String message) {
 		return createAlert(message, AlertType.CONFIRMATION).showAndWait();
 	}
-	
+
 	/**
 	 * Creates a quick alert of the given {@code AlertType}. The title for the alert will be the
 	 * {@code AlertType}.
@@ -92,14 +92,14 @@ public class Messenger {
 	 */
 	public static Alert createAlert(String message, AlertType alertType) {
 		Alert alert = new Alert(alertType);
-		
+
 		String alertTitle = alertType.toString();
 		alertTitle = alertTitle.charAt(0) + alertTitle.substring(1).toLowerCase();
 		alert.setTitle(alertTitle);
-		
+
 		alert.setHeaderText(null);
 		alert.setContentText(message);
-		
+
 		return alert;
 	}
 

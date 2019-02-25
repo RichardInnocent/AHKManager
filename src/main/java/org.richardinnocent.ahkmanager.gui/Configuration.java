@@ -1,4 +1,4 @@
-package gui;
+package org.richardinnocent.ahkmanager.gui;
 
 import java.io.*;
 import java.util.Properties;
@@ -6,24 +6,24 @@ import java.util.Properties;
 /**
  * Class that handles all of the program configuration, such as window size. it contains many
  * static methods for ease of use, and should not be instantiated.
- * 
+ *
  * @author Richard Innocent
  */
 public class Configuration {
-	
+
 	private static Properties config = new Properties();
-	
+
 	// Loading config
 	static {
 		setDefaults();
 		load(FileLocations.CONFIG_FILE.toString());
 	}
-	
+
 	/**
 	 * Stop instances of Configuration being created
 	 */
 	private Configuration() {}
-	
+
 	/**
 	 * Sets the default values for the config.
 	 */
@@ -33,7 +33,7 @@ public class Configuration {
 		config.setProperty(ConfigProperty.HEIGHT.getPropertyName(),
 				ConfigProperty.HEIGHT.getDefault());
 	}
-	
+
 	/**
 	 * Reads in the config file.
 	 * @param filePath The filepath of the config file
@@ -52,7 +52,7 @@ public class Configuration {
 			}
 		}
 	}
-	
+
 	/**
 	 * Saves the configuration.
 	 */
@@ -70,7 +70,7 @@ public class Configuration {
 			Messenger.showError(e.toString());
 		}
 	}
-	
+
 	/**
 	 * Gets the property with the given name. If the property does not exist within the config
 	 * file, this method returns {@code null}.
@@ -80,7 +80,7 @@ public class Configuration {
 	public static String getProperty(String property) {
 		return config.getProperty(property);
 	}
-	
+
 	/**
 	 * Get the given property. If the property does not exist within the config file, the method
 	 * returns {@code null}.
@@ -90,7 +90,7 @@ public class Configuration {
 	public static String getProperty(ConfigProperty property) {
 		return getProperty(property.getPropertyName());
 	}
-	
+
 	/**
 	 * Gets the given property and parses it to an {@code int}.
 	 * @param property The property whose value is required.
@@ -108,7 +108,7 @@ public class Configuration {
 			throw new IllegalArgumentException("Property " + property + " is not an integer.");
 		}
 	}
-	
+
 	/**
 	 * Gets the given property and parses it to an {@code int}.
 	 * @param property The property whose value is required.
@@ -120,7 +120,7 @@ public class Configuration {
 			throws IllegalArgumentException {
 		return getInt(property.getPropertyName());
 	}
-	
+
 	/**
 	 * Gets the given property and parses it to an {@code double}.
 	 * @param property The property whose value is required.
@@ -138,7 +138,7 @@ public class Configuration {
 			throw new IllegalArgumentException("Property " + property + " is not an integer.");
 		}
 	}
-	
+
 	/**
 	 * Gets the given property and parses it to an {@code double}.
 	 * @param property The property whose value is required.
@@ -150,7 +150,7 @@ public class Configuration {
 			throws IllegalArgumentException {
 		return getDouble(property.getPropertyName());
 	}
-	
+
 	/**
 	 * Sets the property for the given config file.
 	 * @param property The property that is being defined.
@@ -168,7 +168,7 @@ public class Configuration {
 		}
 		throw new IllegalArgumentException(property + " property not used by progam.");
 	}
-	
+
 	/**
 	 * Sets the property for the given config file.
 	 * @param property The property that is being defined.
@@ -179,5 +179,5 @@ public class Configuration {
 	public static Object setProperty(ConfigProperty property, Object value) {
 		return config.setProperty(property.getPropertyName(), value.toString());
 	}
-	
+
 }

@@ -1,16 +1,17 @@
-package scripts;
+package org.richardinnocent.ahkmanager.scripts;
 
 import java.io.*;
 import java.util.*;
+import org.richardinnocent.ahkmanager.gui.Messenger;
 
 public class AHKScript extends AHKFile {
-	
+
 	// TODO: Remove silly name.
 	String description = "A script",
 			commentFlag = ";";
-	
+
 	List<Hotkey> hotkeys = new ArrayList<Hotkey>();
-	
+
 	/**
 	 * Creates an {@code AHKScript}.
 	 * @param file The script file.
@@ -27,7 +28,7 @@ public class AHKScript extends AHKFile {
 		}
 		parse();
 	}
-	
+
 	/**
 	 * Gets the description for the script.
 	 * @return The description for the script.
@@ -39,15 +40,15 @@ public class AHKScript extends AHKFile {
 	private void parse() {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
-			
+
 			String currentLine = "",
 					description = "",
 					code = "";
-			
+
 			// The flag that says whether this function is currently processing a description.
 			boolean processingDesc = false,
 					processingComment = false;
-			
+
 			// Reading in the file
 			try {
 				lines: while ((currentLine = reader.readLine()) != null) {
@@ -55,16 +56,16 @@ public class AHKScript extends AHKFile {
 					// Whole line is a comment so can be ignored
 					if (currentLine.startsWith(commentFlag))
 						continue;
-					
+
 					// Looping characters in line
 					chars: for (int i = 0; i < currentLine.length(); i++) {
-						
+
 						// Cutting string to this character onwards
 						String characters = currentLine.substring(i);
-						
+
 						// If processing comment
 						if (processingComment) {
-							
+
 							if (characters.startsWith("*/")) {
 								processingComment = processingDesc = false;
 								i++; // Ignore the second forward slash so that something like */*
@@ -72,10 +73,10 @@ public class AHKScript extends AHKFile {
 							} else if (processingDesc) {
 								description += characters.charAt(0);
 							}
-							
+
 						// If not processing comment
 						} else {
-							
+
 							// If single line comment then rest of line can be ignored
 							if (characters.startsWith("\t") || characters.startsWith(" ")) {
 								if (characters.substring(1).startsWith(commentFlag)) {
@@ -85,18 +86,18 @@ public class AHKScript extends AHKFile {
 								// checks.
 								continue chars;
 							}
-							
+
 							// If a new multi-line comment is beginning...
 							if (characters.startsWith("/*")) {
 								processingComment = true;
-								
+
 								// If a new description is starting...
 								if (characters.startsWith("/**")) {
 									// Set the old description to blank
 									description = "";
-									
+
 									processingDesc = true;
-									
+
 									// Stop the ** being processed as part of the description
 									i += 2;
 								}
@@ -106,14 +107,14 @@ public class AHKScript extends AHKFile {
 							}
 						}
 					}
-					
+
 					// Once the line has been processed...
-					
+
 					// Check if the code contained a hotkey
 					if (code.contains("::")) {
 						String [] components = code.split("::");
 						hotkeys.add(new Hotkey(description.trim(), components[0].trim()));
-						
+
 					// Check if the code contains a comment flag modification
 					} else if (code.toLowerCase().contains("#commentflag\\S+")) {
 						int commentFlagIndex = code.indexOf('#');
@@ -123,19 +124,19 @@ public class AHKScript extends AHKFile {
 									"#commentflag".length()).trim();
 						}
 					}
-					
+
 					// Reset code
 					code = "";
-					
+
 				}
 			} catch (IOException e) {
-				gui.Messenger.showError("AHKScript could not be read at\n" +
+				Messenger.showError("AHKScript could not be read at\n" +
 						file.getAbsolutePath(), e);
 			}
-			
+
 		} catch (FileNotFoundException e) {
-			gui.Messenger.showError("AHKScript not found at " + file.getAbsolutePath(), e);
+			Messenger.showError("AHKScript not found at " + file.getAbsolutePath(), e);
 		}
 	}
-	
+
 }

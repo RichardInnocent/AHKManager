@@ -1,12 +1,12 @@
-package scripts;
+package org.richardinnocent.ahkmanager.scripts;
 
 import java.io.*;
 import java.util.*;
 
-import gui.Messenger;
+import org.richardinnocent.ahkmanager.gui.Messenger;
 
 public class AHKDirectory extends AHKFile {
-	
+
 	List<AHKFile> ahkFiles = new ArrayList<>(); // Contains all AHK files in directory
 
 	/**
@@ -25,7 +25,7 @@ public class AHKDirectory extends AHKFile {
 			refreshDirectory();
 		}
 	}
-	
+
 	/**
 	 * Searches the directory for {@code AHKFile}s and makes sure that the {@AHKDirectory} is up
 	 * to date.
@@ -47,7 +47,7 @@ public class AHKDirectory extends AHKFile {
 			}
 		}
 	}
-	
+
 	/**
 	 * Gets all of the {@code AHKFile}s within the directory.
 	 * @return A {@code List} of all {@code AHKFile}s within the directory.
@@ -55,5 +55,5 @@ public class AHKDirectory extends AHKFile {
 	public List<AHKFile> getFiles() {
 		return ahkFiles;
 	}
-	
+
 }
