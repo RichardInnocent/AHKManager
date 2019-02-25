@@ -16,7 +16,7 @@ public class AHKController {
 	@FXML ListView<File> activeList;
 	@FXML TreeView<AHKFile> allTreeView;
 
-	AHKFile scriptRootDir;
+	private AHKFile scriptRootDir;
 
 	@FXML
 	public void initialize() {
