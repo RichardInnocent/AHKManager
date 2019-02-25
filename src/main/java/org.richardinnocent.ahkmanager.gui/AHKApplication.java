@@ -2,6 +2,7 @@ package org.richardinnocent.ahkmanager.gui;
 
 import java.io.*;
 
+import org.richardinnocent.ahkmanager.files.AppConfig;
 import org.richardinnocent.ahkmanager.files.Resources;
 
 import javafx.application.Application;
@@ -15,11 +16,12 @@ public class AHKApplication extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("AHK Manager");
 
+		AppConfig config = AppConfig.initialise(null);
+
 		// Loading FXML
 		InputStream fxmlInput = Resources.HOME_FXML.createInputStream();
 		primaryStage.setScene(new Scene((new FXMLLoader()).load(fxmlInput),
-				Configuration.getInt(ConfigProperty.HEIGHT),
-				Configuration.getInt(ConfigProperty.WIDTH)));
+				config.getInitialWidth(), config.getInitialHeight()));
 
 		primaryStage.show();
 	}

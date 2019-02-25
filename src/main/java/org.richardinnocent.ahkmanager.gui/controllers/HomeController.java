@@ -2,26 +2,27 @@ package org.richardinnocent.ahkmanager.gui.controllers;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.richardinnocent.ahkmanager.flow.Execution;
 import org.richardinnocent.ahkmanager.scripts.AHKDirectory;
 import org.richardinnocent.ahkmanager.scripts.AHKFile;
+import org.richardinnocent.ahkmanager.scripts.AHKScript;
 
-import javafx.event.EventHandler;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class HomeController {
 
 	private static final Logger LOGGER = LogManager.getLogger(HomeController.class);
 
-	@FXML ListView<File> activeList;
-	@FXML TreeView<AHKFile> allTreeView;
+	@FXML TableView<ScriptRow> tableView;
 
-	private AHKFile scriptRootDir;
+	private AHKDirectory scriptRootDir;
 
 	@FXML
 	public void initialize() {
@@ -30,70 +31,53 @@ public class HomeController {
 		try {
 			scriptRootDir = new AHKDirectory(new File(
 					"C:\\Users\\RichardInnocent\\Documents\\AHKScripts"));
-			System.out.println(scriptRootDir);
 		} catch (FileNotFoundException | IllegalArgumentException e) {
 			Execution.error(LOGGER, e.toString(), e);
 			System.exit(1);
 		}
 
-		// Setting up TreeView for all contained scripts
-		TreeItem<AHKFile> root = new TreeItem<>(scriptRootDir);
-		populateTreeItem(root);
-		allTreeView.setRoot(root);
-		root.setExpanded(true);
+		TableColumn<ScriptRow, String> nameColumn = new TableColumn<>("Name");
+		nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+		TableColumn<ScriptRow, Boolean> activeColumn = new TableColumn<>("Active");
+		activeColumn.setCellValueFactory(new PropertyValueFactory<>("active"));
+		TableColumn<ScriptRow, String> pathColumn = new TableColumn<>("Path");
+		pathColumn.setCellValueFactory(new PropertyValueFactory<>("path"));
 
-		allTreeView.setCellFactory(treeView -> new AHKCell() {
-		});
+		tableView.getColumns().addAll(nameColumn, activeColumn, pathColumn);
 
+		List<ScriptRow> rows = scriptRootDir.getFiles()
+																				.stream()
+																				.filter(AHKFile::isScript)
+																				.map(ahkFile -> new ScriptRow((AHKScript) ahkFile))
+																				.sorted((o1, o2) -> o1.getPath().compareTo(o2.getPath()))
+																				.collect(Collectors.toList());
+
+		tableView.setItems(FXCollections.observableArrayList(rows));
 	}
 
-	private class AHKCell extends TreeCell<AHKFile> {
-		private Tooltip tooltip = new Tooltip();
+	public class ScriptRow {
 
-	    @Override
-	    public void updateItem(AHKFile item, boolean empty) {
-	    	super.updateItem(item, empty);
+		private String name;
+		private Boolean active;
+		private String path;
 
-	    	if (empty) {
-		    	setText(null);
-		    	setGraphic(null);
-		    } else {
-		    	setText(item.toString());
-		    	setGraphic(getTreeItem().getGraphic());
-		    }
-
-	    	if (item != null) {
-		    	// If the contained item is a script, add a Tooltip on hover.
-		    	if (item.isScript()) {
-		    		setOnMouseEntered(new EventHandler<MouseEvent>() {
-		    			@Override
-		    			public void handle(MouseEvent event) {
-		    				tooltip.setText(item.toString());
-		    				setTooltip(tooltip);
-		    			}
-		    		});
-		    	}
-	    	}
-
-
-	    }
-	}
-
-	private TreeItem<AHKFile> populateTreeItem(TreeItem<AHKFile> root) {
-		AHKFile ahkRoot = root.getValue();
-
-		// If the ahkRoot is a directory, add all files.
-		if (!ahkRoot.isScript()) {
-			List<AHKFile> containedFiles = ((AHKDirectory) ahkRoot).getFiles();
-			for (AHKFile file : containedFiles) {
-				TreeItem<AHKFile> newTreeItem = new TreeItem<>(file);
-				populateTreeItem(newTreeItem);
-				root.getChildren().add(newTreeItem);
-			}
-		} else {
-			// TODO: Add event handler to mouse on hover
+		ScriptRow(AHKScript script) {
+			name = script.getFileName();
+			active = false;
+			path = script.getFilePath();
 		}
-		return root;
+
+		public String getName() {
+			return name;
+		}
+
+		public Boolean isActive() {
+			return active;
+		}
+
+		public String getPath() {
+			return path;
+		}
 	}
 
 }

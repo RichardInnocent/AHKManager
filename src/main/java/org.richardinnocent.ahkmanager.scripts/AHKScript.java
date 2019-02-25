@@ -12,10 +12,16 @@ public class AHKScript extends AHKFile {
 	private static final Logger LOGGER = LogManager.getLogger(AHKScript.class);
 
 	// TODO: Remove silly name.
-	String description = "A script",
+	private final String name;
+	private final String path;
+
+	private boolean active;
+
+	private String description = "A script",
 			commentFlag = ";";
 
-	List<Hotkey> hotkeys = new ArrayList<Hotkey>();
+	private List<Hotkey> hotkeys = new ArrayList<>();
+
 
 	/**
 	 * Creates an {@code AHKScript}.
@@ -30,6 +36,8 @@ public class AHKScript extends AHKFile {
 			throw new IllegalArgumentException(file.getAbsolutePath() + " is a directory");
 		} else {
 			this.file = file;
+			this.name = file.getName();
+			this.path = file.getAbsolutePath();
 		}
 		parse();
 	}
