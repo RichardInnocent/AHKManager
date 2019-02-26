@@ -31,7 +31,7 @@ public class HomeController {
 		try {
 			scriptRootDir = new AHKDirectory(new File(
 					"C:\\Users\\RichardInnocent\\Documents\\AHKScripts"));
-		} catch (FileNotFoundException | IllegalArgumentException e) {
+		} catch (SecurityException | IllegalArgumentException e) {
 			Execution.error(LOGGER, e.toString(), e);
 			System.exit(1);
 		}
@@ -45,12 +45,13 @@ public class HomeController {
 
 		tableView.getColumns().addAll(nameColumn, activeColumn, pathColumn);
 
-		List<ScriptRow> rows = scriptRootDir.getFiles()
-																				.stream()
-																				.filter(AHKFile::isScript)
-																				.map(ahkFile -> new ScriptRow((AHKScript) ahkFile))
-																				.sorted(Comparator.comparing(ScriptRow::getPath))
-																				.collect(Collectors.toList());
+		List<ScriptRow> rows = scriptRootDir
+				.getFiles()
+				.stream()
+				.filter(AHKFile::isScript)
+				.map(ahkFile -> new ScriptRow((AHKScript) ahkFile))
+				.sorted(Comparator.comparing(ScriptRow::getPath))
+				.collect(Collectors.toList());
 
 		tableView.setItems(FXCollections.observableArrayList(rows));
 	}

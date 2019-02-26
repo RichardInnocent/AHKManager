@@ -19,10 +19,8 @@ public class AHKDirectory extends AHKFile {
 	 * @throws FileNotFoundException If the given file is not found.
 	 * @throws IllegalArgumentException If the given file is not a directory.
 	 */
-	public AHKDirectory(File file) throws FileNotFoundException, IllegalArgumentException {
-		if (!file.exists()) {
-			throw new FileNotFoundException("Could not find file " + file.getAbsolutePath());
-		} else if (!file.isDirectory()) {
+	public AHKDirectory(File file) throws SecurityException, IllegalArgumentException {
+		if (!file.isDirectory()) {
 			throw new IllegalArgumentException(file.getAbsolutePath() + " is not a directory");
 		} else {
 			this.file = file;
@@ -35,13 +33,12 @@ public class AHKDirectory extends AHKFile {
 	 * to date.
 	 */
 	public void refreshDirectory() {
+		// TODO improvement: don't clear the directory and then re-add everything
+		// Check if everything that it says is there is still there, and then add any new ones
+		ahkFiles.clear();
 		for (File fileInDirectory : file.listFiles()) {
 			if (fileInDirectory.isDirectory()) {
-				try {
-					ahkFiles.add(new AHKDirectory(fileInDirectory));
-				} catch (FileNotFoundException e) {
-					Execution.error(LOGGER, e.toString(), e);
-				}
+				ahkFiles.add(new AHKDirectory(fileInDirectory));
 			} else if(fileInDirectory.getName().endsWith(".ahk")) {
 				try {
 					ahkFiles.add(new AHKScript(fileInDirectory));
