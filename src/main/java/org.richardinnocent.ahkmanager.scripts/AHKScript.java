@@ -11,17 +11,15 @@ public class AHKScript extends AHKFile {
 
 	private static final Logger LOGGER = LogManager.getLogger(AHKScript.class);
 
-	// TODO: Remove silly name.
 	private final String name;
 	private final String path;
 
 	private boolean active;
 
-	private String description = "A script",
-			commentFlag = ";";
+	private String description = "A script";
+	private String commentFlag = ";";
 
 	private List<Hotkey> hotkeys = new ArrayList<>();
-
 
 	/**
 	 * Creates an {@code AHKScript}.
@@ -49,6 +47,19 @@ public class AHKScript extends AHKFile {
 	public String getDescription() {
 		return description;
 	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void run() {
+		// TODO
+	}
+
+	public void stop() {
+		// TODO
+	}
+
 	// /** adacacacac */
 	private void parse() {
 		try {

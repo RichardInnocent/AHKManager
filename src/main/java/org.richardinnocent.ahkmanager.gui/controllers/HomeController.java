@@ -49,7 +49,7 @@ public class HomeController {
 																				.stream()
 																				.filter(AHKFile::isScript)
 																				.map(ahkFile -> new ScriptRow((AHKScript) ahkFile))
-																				.sorted((o1, o2) -> o1.getPath().compareTo(o2.getPath()))
+																				.sorted(Comparator.comparing(ScriptRow::getPath))
 																				.collect(Collectors.toList());
 
 		tableView.setItems(FXCollections.observableArrayList(rows));
@@ -63,7 +63,7 @@ public class HomeController {
 
 		ScriptRow(AHKScript script) {
 			name = script.getFileName();
-			active = false;
+			active = script.isActive();
 			path = script.getFilePath();
 		}
 
