@@ -1,13 +1,10 @@
 package org.richardinnocent.ahkmanager.gui.controllers;
 
-import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.richardinnocent.ahkmanager.flow.Execution;
-import org.richardinnocent.ahkmanager.scripts.AHKDirectory;
+import org.richardinnocent.ahkmanager.files.DirectoryController;
 import org.richardinnocent.ahkmanager.scripts.AHKFile;
 import org.richardinnocent.ahkmanager.scripts.AHKScript;
 
@@ -22,19 +19,8 @@ public class HomeController {
 
 	@FXML TableView<ScriptRow> tableView;
 
-	private AHKDirectory scriptRootDir;
-
 	@FXML
 	public void initialize() {
-
-		// Initialising root directory
-		try {
-			scriptRootDir = new AHKDirectory(new File(
-					"C:\\Users\\RichardInnocent\\Documents\\AHKScripts"));
-		} catch (SecurityException | IllegalArgumentException e) {
-			Execution.error(LOGGER, e.toString(), e);
-			System.exit(1);
-		}
 
 		TableColumn<ScriptRow, String> nameColumn = new TableColumn<>("Name");
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -45,13 +31,16 @@ public class HomeController {
 
 		tableView.getColumns().addAll(nameColumn, activeColumn, pathColumn);
 
-		List<ScriptRow> rows = scriptRootDir
-				.getFiles()
-				.stream()
-				.filter(AHKFile::isScript)
-				.map(ahkFile -> new ScriptRow((AHKScript) ahkFile))
-				.sorted(Comparator.comparing(ScriptRow::getPath))
-				.collect(Collectors.toList());
+		List<ScriptRow> rows = new LinkedList<>();
+		DirectoryController.getInstance()
+											 .getDirectories()
+											 .stream()
+											 .forEach(ahkDirectory ->
+																		ahkDirectory.getFiles()
+																								.stream().filter(AHKFile::isScript)
+																								.map(ahkFile ->new ScriptRow((AHKScript) ahkFile))
+																								.forEach(rows::add));
+		rows.sort(Comparator.comparing(ScriptRow::getPath));
 
 		tableView.setItems(FXCollections.observableArrayList(rows));
 	}
