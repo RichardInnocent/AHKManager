@@ -5,8 +5,6 @@ import java.io.*;
 import org.richardinnocent.ahkmanager.files.AppConfig;
 import org.richardinnocent.ahkmanager.files.DirectoryController;
 import org.richardinnocent.ahkmanager.files.Resources;
-import org.richardinnocent.ahkmanager.scripts.AHKDirectory;
-import org.richardinnocent.ahkmanager.scripts.AHKDirectoryManager;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
